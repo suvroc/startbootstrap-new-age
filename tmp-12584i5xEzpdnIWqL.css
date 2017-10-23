@@ -1,0 +1,54 @@
+@font-face {
+  font-family: 'Catamaran';
+  font-style: normal;
+  font-weight: 100;
+  src: local('Catamaran Thin'), local('Catamaran-Thin'), url(https://fonts.gstatic.com/s/catamaran/v4/AsJXcel0VOprDS7k9OVAc50EAVxt0G0biEntp43Qt6E.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Catamaran';
+  font-style: normal;
+  font-weight: 200;
+  src: local('Catamaran ExtraLight'), local('Catamaran-ExtraLight'), url(https://fonts.gstatic.com/s/catamaran/v4/hFc-HKSsGk6M-psujei1MInF5uFdDttMLvmWuJdhhgs.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Catamaran';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Catamaran Light'), local('Catamaran-Light'), url(https://fonts.gstatic.com/s/catamaran/v4/Aaag4ccR7Oh_4eai-jbrYInF5uFdDttMLvmWuJdhhgs.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Catamaran';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Catamaran Regular'), local('Catamaran-Regular'), url(https://fonts.gstatic.com/s/catamaran/v4/iVYgK2bOLvZcSxr0ITOecqCWcynf_cDxXwCLxiixG1c.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Catamaran';
+  font-style: normal;
+  font-weight: 500;
+  src: local('Catamaran Medium'), local('Catamaran-Medium'), url(https://fonts.gstatic.com/s/catamaran/v4/83WSX3F86qsvj1Z4EI0tQonF5uFdDttMLvmWuJdhhgs.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Catamaran';
+  font-style: normal;
+  font-weight: 600;
+  src: local('Catamaran SemiBold'), local('Catamaran-SemiBold'), url(https://fonts.gstatic.com/s/catamaran/v4/a9PlHHnuBWiGGk0TwuFKTonF5uFdDttMLvmWuJdhhgs.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Catamaran';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Catamaran Bold'), local('Catamaran-Bold'), url(https://fonts.gstatic.com/s/catamaran/v4/PpgVtUHUdnBZYNpnzGbSc4nF5uFdDttMLvmWuJdhhgs.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Catamaran';
+  font-style: normal;
+  font-weight: 800;
+  src: local('Catamaran ExtraBold'), local('Catamaran-ExtraBold'), url(https://fonts.gstatic.com/s/catamaran/v4/6VjB_uSfn3DZ93IQv58CmInF5uFdDttMLvmWuJdhhgs.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Catamaran';
+  font-style: normal;
+  font-weight: 900;
+  src: local('Catamaran Black'), local('Catamaran-Black'), url(https://fonts.gstatic.com/s/catamaran/v4/5ys9TqpQc9Q6gHqbSox6p4nF5uFdDttMLvmWuJdhhgs.ttf) format('truetype');
+}
