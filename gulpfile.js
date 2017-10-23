@@ -6,6 +6,9 @@ var cleanCSS = require('gulp-clean-css');
 var rename = require("gulp-rename");
 var uglify = require('gulp-uglify');
 var pkg = require('./package.json');
+var path = require('path');
+const imagemin = require('gulp-imagemin');
+var ghPages = require('gulp-gh-pages');
 
 // Set the banner content
 var banner = ['/*!\n',
@@ -16,6 +19,8 @@ var banner = ['/*!\n',
   ''
 ].join('');
 
+var buildPath = 'dist/';
+
 // Compiles SCSS files from /scss into /css
 gulp.task('sass', function() {
   return gulp.src('scss/new-age.scss')
@@ -23,7 +28,25 @@ gulp.task('sass', function() {
     .pipe(header(banner, {
       pkg: pkg
     }))
-    .pipe(gulp.dest('css'))
+    .pipe(gulp.dest(path.join(buildPath, 'css')))
+    .pipe(browserSync.reload({
+      stream: true
+    }))
+});
+
+gulp.task('sass-and-min', function() {
+  return gulp.src('scss/new-age.scss')
+    .pipe(sass())
+    .pipe(header(banner, {
+      pkg: pkg
+    }))
+    .pipe(cleanCSS({
+      compatibility: 'ie8'
+    }))
+    .pipe(rename({
+      suffix: '.min'
+    }))
+    .pipe(gulp.dest(path.join(buildPath, 'css')))
     .pipe(browserSync.reload({
       stream: true
     }))
@@ -38,7 +61,7 @@ gulp.task('minify-css', ['sass'], function() {
     .pipe(rename({
       suffix: '.min'
     }))
-    .pipe(gulp.dest('css'))
+    .pipe(gulp.dest(path.join(buildPath, 'css')))
     .pipe(browserSync.reload({
       stream: true
     }))
@@ -54,7 +77,7 @@ gulp.task('minify-js', function() {
     .pipe(rename({
       suffix: '.min'
     }))
-    .pipe(gulp.dest('js'))
+    .pipe(gulp.dest(path.join(buildPath, 'js')))
     .pipe(browserSync.reload({
       stream: true
     }))
@@ -69,17 +92,22 @@ gulp.task('copy', function() {
       '!**/bootstrap-theme.*',
       '!**/*.map'
     ])
-    .pipe(gulp.dest('vendor/bootstrap'))
+    .pipe(gulp.dest(path.join(buildPath, 'vendor/bootstrap')))
 
   gulp.src(['node_modules/jquery/dist/jquery.js', 'node_modules/jquery/dist/jquery.min.js'])
-    .pipe(gulp.dest('vendor/jquery'))
+    .pipe(gulp.dest(path.join(buildPath, 'vendor/jquery')))
 
   gulp.src(['node_modules/jquery.easing/*.js'])
-    .pipe(gulp.dest('vendor/jquery-easing'))
+    .pipe(gulp.dest(path.join(buildPath, 'vendor/jquery-easing')))
 
   gulp.src(['node_modules/simple-line-icons/*/*'])
-    .pipe(gulp.dest('vendor/simple-line-icons'))
+    .pipe(gulp.dest(path.join(buildPath, 'vendor/simple-line-icons')))
 
+  gulp.src(['*.html'])
+    .pipe(gulp.dest(path.join(buildPath, '')));
+
+  gulp.src(['device-mockups/**/*.css'])
+    .pipe(gulp.dest(path.join(buildPath, 'device-mockups/')));
 
   gulp.src([
       'node_modules/font-awesome/**',
@@ -89,23 +117,41 @@ gulp.task('copy', function() {
       '!node_modules/font-awesome/*.md',
       '!node_modules/font-awesome/*.json'
     ])
-    .pipe(gulp.dest('vendor/font-awesome'))
-})
+    .pipe(gulp.dest(path.join(buildPath, 'vendor/font-awesome')))
+});
+
+gulp.task('images', function() {
+  gulp.src(['img/**/*'])
+  .pipe(gulp.dest(path.join(buildPath, 'img/')));
+
+  gulp.src(['device-mockups/**/*.png'])
+  .pipe(gulp.dest(path.join(buildPath, 'device-mockups/')));
+});
+
+gulp.task('images-dist', function() {
+  gulp.src(['img/**/*'])
+  .pipe(imagemin())
+  .pipe(gulp.dest(path.join(buildPath, 'img/')));
+
+  gulp.src(['device-mockups/**/*.png'])
+  //.pipe(imagemin())
+  .pipe(gulp.dest(path.join(buildPath, 'device-mockups/')));
+});
 
 // Default task
-gulp.task('default', ['sass', 'minify-css', 'minify-js', 'copy']);
+gulp.task('default', ['sass-and-min', 'minify-css', 'minify-js', 'images-dist', 'copy']);
 
 // Configure the browserSync task
 gulp.task('browserSync', function() {
   browserSync.init({
     server: {
-      baseDir: ''
+      baseDir: buildPath 
     },
   })
 })
 
 // Dev task with browserSync
-gulp.task('dev', ['browserSync', 'sass', 'minify-css', 'minify-js'], function() {
+gulp.task('dev', ['browserSync', 'sass', 'minify-css', 'minify-js', 'images', 'copy'], function() {
   gulp.watch('scss/*.scss', ['sass']);
   gulp.watch('css/*.css', ['minify-css']);
   gulp.watch('js/*.js', ['minify-js']);
@@ -113,3 +159,10 @@ gulp.task('dev', ['browserSync', 'sass', 'minify-css', 'minify-js'], function() 
   gulp.watch('*.html', browserSync.reload);
   gulp.watch('js/**/*.js', browserSync.reload);
 });
+
+gulp.task('deploy', ['default'], function() {
+  return gulp.src('./dist/**/*')
+    .pipe(ghPages());
+});
+
+

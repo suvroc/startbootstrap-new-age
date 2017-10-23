@@ -37,8 +37,10 @@
     "gulp": "^3.9.1",
     "gulp-clean-css": "3.9.0",
     "gulp-header": "1.8.9",
+    "gulp-imagemin": "^3.4.0",
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^3.1.0",
-    "gulp-uglify": "3.0.0"
+    "gulp-uglify": "3.0.0",
+    "gulp-gh-pages": "^0.5.4"
   }
 }
