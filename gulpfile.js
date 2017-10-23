@@ -9,6 +9,9 @@ var pkg = require('./package.json');
 var path = require('path');
 const imagemin = require('gulp-imagemin');
 var ghPages = require('gulp-gh-pages');
+const imageminJpegRecompress = require('imagemin-jpeg-recompress');
+const imageminPngquant = require('imagemin-pngquant');
+var critical = require('critical');
 
 // Set the banner content
 var banner = ['/*!\n',
@@ -103,7 +106,7 @@ gulp.task('copy', function() {
   gulp.src(['node_modules/simple-line-icons/*/*'])
     .pipe(gulp.dest(path.join(buildPath, 'vendor/simple-line-icons')))
 
-  gulp.src(['*.html'])
+  gulp.src(['index.html'])
     .pipe(gulp.dest(path.join(buildPath, '')));
 
   gulp.src(['device-mockups/**/*.css'])
@@ -130,7 +133,16 @@ gulp.task('images', function() {
 
 gulp.task('images-dist', function() {
   gulp.src(['img/**/*'])
-  .pipe(imagemin())
+  .pipe(imagemin([
+    imagemin.gifsicle({interlaced: true}),
+    imageminJpegRecompress({
+        progressive: true,
+        max: 80,
+        min: 70
+    }),
+    imageminPngquant({quality: '75-85'}),
+    imagemin.svgo({plugins: [{removeViewBox: false}]})
+]))
   .pipe(gulp.dest(path.join(buildPath, 'img/')));
 
   gulp.src(['device-mockups/**/*.png'])
@@ -160,9 +172,32 @@ gulp.task('dev', ['browserSync', 'sass', 'minify-css', 'minify-js', 'images', 'c
   gulp.watch('js/**/*.js', browserSync.reload);
 });
 
-gulp.task('deploy', ['default'], function() {
+gulp.task('deploy', ['default', 'critical'], function() {
   return gulp.src('./dist/**/*')
     .pipe(ghPages());
+});
+
+gulp.task('optimize-css', function() {
+  return gulp.src('css/*.css')
+      .pipe(autoprefixer())
+      .pipe(uncss({
+          html: ['_site/**/*.html'],
+          ignore: []
+      }))
+      .pipe(minifyCss({keepBreaks: false}))
+      .pipe(gulp.dest(path.join(buildPath,'css/')));
+});
+
+gulp.task('critical', ['default'], function (cb) {
+  critical.generate({
+      inline: true,
+      base: 'dist/',
+      src: 'index.html',
+      dest: 'index.html',
+      minify: true,
+      width: 800,
+      height: 600
+  }, cb.bind(cb));
 });
 
 
